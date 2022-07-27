@@ -66,15 +66,15 @@ impl Controller {
         }
     }
     fn draw_grid(&mut self, context: &mut Context) -> GameResult {
+        let pt = mint::Point2 {
+            x: (WIDTH - 3. * SIZE as f32) / 2.,
+            y: (HEIGHT - 3. * SIZE as f32) / 2.,
+        };
+        let params = graphics::DrawParam::new().scale(mint::Vector2 { x: 3., y: 3. }).dest(pt).color(LINE_COLOR);
+        self.batch.add(params);
+
         for x in 0..3 {
             for y in 0..3 {
-                let pt = mint::Point2 {
-                    x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * SIZE as f32,
-                    y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * SIZE as f32,
-                };
-                let params = graphics::DrawParam::new().dest(pt).color(LINE_COLOR);
-                self.batch.add(params);
-
                 let pt = mint::Point2 {
                     x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32 * 1. / INNER_SCALE),
                     y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32 * 1. / INNER_SCALE),
