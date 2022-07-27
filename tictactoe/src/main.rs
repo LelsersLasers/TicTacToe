@@ -14,8 +14,13 @@ const HEIGHT: f32 = 600.;
 const SIZE: u16 = 120;
 const INNER_SCALE: f32 = 0.99;
 
+const CELL_SCALE: f32 = 0.6;
+
 const BACK_COLOR: graphics::Color = graphics::Color::BLACK;
 const LINE_COLOR: graphics::Color = graphics::Color::WHITE;
+
+const X_COLOR: graphics::Color = graphics::Color::GREEN;
+const O_COLOR: graphics::Color = graphics::Color::RED;
 
 
 struct ToggleKey {
@@ -36,33 +41,23 @@ impl ToggleKey {
 	}
 }
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq)]
 enum Cell {
     Empty,
     X,
     O,
 }
 
-struct Board {
-    cells: [[Cell; 3]; 3],
-}
-impl Board {
-    fn new() -> Self {
-        Self {
-            cells: [[Cell::Empty; 3]; 3],
-        }
-    }
-}
 
 struct Controller {
     batch: graphics::spritebatch::SpriteBatch,
-    board: Board,
+    cells: [[Cell; 3]; 3],
 }
 impl Controller {
     pub fn new(batch: graphics::spritebatch::SpriteBatch) -> Self {
         Self {
             batch: batch,
-            board: Board::new(),
+            cells: [[Cell::Empty; 3]; 3],
         }
     }
     fn draw_grid(&mut self, context: &mut Context) -> GameResult {
@@ -73,11 +68,13 @@ impl Controller {
         let params = graphics::DrawParam::new().scale(mint::Vector2 { x: 3., y: 3. }).dest(pt).color(LINE_COLOR);
         self.batch.add(params);
 
+        self.cells[1][1] = Cell::X;
+
         for x in 0..3 {
             for y in 0..3 {
                 let pt = mint::Point2 {
-                    x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32 * 1. / INNER_SCALE),
-                    y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32 * 1. / INNER_SCALE),
+                    x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32) + (1. - INNER_SCALE) / 2. * SIZE as f32,
+                    y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32) + (1. - INNER_SCALE) / 2. * SIZE as f32,
                 };
                 let scale = mint::Vector2 {
                     x: INNER_SCALE,
@@ -85,6 +82,25 @@ impl Controller {
                 };
                 let params = graphics::DrawParam::new().scale(scale).dest(pt).color(BACK_COLOR);
                 self.batch.add(params);
+
+                if self.cells[x][y] != Cell::Empty {
+                    let pt = mint::Point2 {
+                        x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32) + (1. - CELL_SCALE) / 2. * SIZE as f32,
+                        y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32) + (1. - CELL_SCALE) / 2. * SIZE as f32,
+                    };
+                    let scale = mint::Vector2 {
+                        x: CELL_SCALE,
+                        y: CELL_SCALE,
+                    };
+                    let params = graphics::DrawParam::new().scale(scale).dest(pt).color(
+                        match self.cells[x][y] {
+                            Cell::X => X_COLOR,
+                            Cell::O => O_COLOR,
+                            Cell::Empty => BACK_COLOR, // should be unreachable
+                        },
+                    );
+                    self.batch.add(params);
+                }
             }
         }
 
