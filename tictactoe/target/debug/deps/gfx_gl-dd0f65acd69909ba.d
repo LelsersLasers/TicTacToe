@@ -1,0 +1,8 @@
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\deps\gfx_gl-dd0f65acd69909ba.rmeta: C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\gfx_gl-0.6.1\src/lib.rs C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\build\gfx_gl-a3371b30ef1681e3\out/gl_bindings.rs
+
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\deps\gfx_gl-dd0f65acd69909ba.d: C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\gfx_gl-0.6.1\src/lib.rs C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\build\gfx_gl-a3371b30ef1681e3\out/gl_bindings.rs
+
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\gfx_gl-0.6.1\src/lib.rs:
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\build\gfx_gl-a3371b30ef1681e3\out/gl_bindings.rs:
+
+# env-dep:OUT_DIR=C:\\Users\\milla\\Desktop\\coding\\TicTacToe\\tictactoe\\target\\debug\\build\\gfx_gl-a3371b30ef1681e3\\out

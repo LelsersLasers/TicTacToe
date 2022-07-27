@@ -22,7 +22,6 @@ const LINE_COLOR: graphics::Color = graphics::Color::WHITE;
 const X_COLOR: graphics::Color = graphics::Color::GREEN;
 const O_COLOR: graphics::Color = graphics::Color::RED;
 
-
 struct ToggleKey {
     was_down: bool,
 }
@@ -38,7 +37,7 @@ impl ToggleKey {
             self.was_down = false;
         }
         false
-	}
+    }
 }
 
 #[derive(Copy, Clone, PartialEq)]
@@ -48,16 +47,17 @@ enum Cell {
     O,
 }
 
-
 struct Controller {
     batch: graphics::spritebatch::SpriteBatch,
     cells: [[Cell; 3]; 3],
+    turn: Cell,
 }
 impl Controller {
     pub fn new(batch: graphics::spritebatch::SpriteBatch) -> Self {
         Self {
             batch: batch,
             cells: [[Cell::Empty; 3]; 3],
+            turn: Cell::X,
         }
     }
     fn draw_grid(&mut self, context: &mut Context) -> GameResult {
@@ -65,40 +65,63 @@ impl Controller {
             x: (WIDTH - 3. * SIZE as f32) / 2.,
             y: (HEIGHT - 3. * SIZE as f32) / 2.,
         };
-        let params = graphics::DrawParam::new().scale(mint::Vector2 { x: 3., y: 3. }).dest(pt).color(LINE_COLOR);
+        let params = graphics::DrawParam::new()
+            .scale(mint::Vector2 { x: 3., y: 3. })
+            .dest(pt)
+            .color(LINE_COLOR);
         self.batch.add(params);
 
         self.cells[1][1] = Cell::X;
+        self.cells[2][1] = Cell::O;
 
         for x in 0..3 {
             for y in 0..3 {
                 let pt = mint::Point2 {
-                    x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32) + (1. - INNER_SCALE) / 2. * SIZE as f32,
-                    y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32) + (1. - INNER_SCALE) / 2. * SIZE as f32,
+                    x: (WIDTH - 3. * SIZE as f32) / 2.
+                        + x as f32 * (SIZE as f32)
+                        + (1. - INNER_SCALE) / 2. * SIZE as f32,
+                    y: (HEIGHT - 3. * SIZE as f32) / 2.
+                        + y as f32 * (SIZE as f32)
+                        + (1. - INNER_SCALE) / 2. * SIZE as f32,
                 };
                 let scale = mint::Vector2 {
                     x: INNER_SCALE,
                     y: INNER_SCALE,
                 };
-                let params = graphics::DrawParam::new().scale(scale).dest(pt).color(BACK_COLOR);
+                let mut params = graphics::DrawParam::new().scale(scale).dest(pt);
+                let mouse_pos = mouse::position(context);
+
+                if self.cells[x][y] != Cell::Empty
+                    || !(mouse_pos.x >= pt.x
+                        && mouse_pos.x <= pt.x + INNER_SCALE * SIZE as f32
+                        && mouse_pos.y >= pt.y
+                        && mouse_pos.y <= pt.y + INNER_SCALE * SIZE as f32)
+                {
+                    params = params.color(BACK_COLOR);
+                }
                 self.batch.add(params);
 
                 if self.cells[x][y] != Cell::Empty {
                     let pt = mint::Point2 {
-                        x: (WIDTH - 3. * SIZE as f32) / 2. + x as f32 * (SIZE as f32) + (1. - CELL_SCALE) / 2. * SIZE as f32,
-                        y: (HEIGHT - 3. * SIZE as f32) / 2. + y as f32 * (SIZE as f32) + (1. - CELL_SCALE) / 2. * SIZE as f32,
+                        x: (WIDTH - 3. * SIZE as f32) / 2.
+                            + x as f32 * (SIZE as f32)
+                            + (1. - CELL_SCALE) / 2. * SIZE as f32,
+                        y: (HEIGHT - 3. * SIZE as f32) / 2.
+                            + y as f32 * (SIZE as f32)
+                            + (1. - CELL_SCALE) / 2. * SIZE as f32,
                     };
                     let scale = mint::Vector2 {
                         x: CELL_SCALE,
                         y: CELL_SCALE,
                     };
-                    let params = graphics::DrawParam::new().scale(scale).dest(pt).color(
-                        match self.cells[x][y] {
+                    let params = graphics::DrawParam::new()
+                        .scale(scale)
+                        .dest(pt)
+                        .color(match self.cells[x][y] {
                             Cell::X => X_COLOR,
                             Cell::O => O_COLOR,
-                            Cell::Empty => BACK_COLOR, // should be unreachable
-                        },
-                    );
+                            _ => unreachable!(), // should be unreachable
+                        });
                     self.batch.add(params);
                 }
             }
@@ -155,7 +178,6 @@ impl event::EventHandler for Controller {
     fn update(&mut self, context: &mut Context) -> GameResult {
         // self.handle_input(context);
 
-
         Ok(())
     }
     fn draw(&mut self, context: &mut Context) -> GameResult {
@@ -178,10 +200,7 @@ impl event::EventHandler for Controller {
 
 fn main() -> GameResult {
     let cb = ContextBuilder::new("TicTacToe", "LelsersLasers")
-        .window_setup(
-            conf::WindowSetup::default()
-                .title("TicTacToe")
-        )
+        .window_setup(conf::WindowSetup::default().title("TicTacToe"))
         .window_mode(conf::WindowMode::default().dimensions(WIDTH, HEIGHT));
     let (mut context, event_loop) = cb.build()?;
 
