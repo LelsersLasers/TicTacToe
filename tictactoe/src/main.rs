@@ -48,18 +48,27 @@ enum Cell {
     O,
 }
 
+#[derive(PartialEq)]
+enum State {
+    Playing,
+    Won(Cell),
+    Draw,
+}
+
 struct Controller {
     batch: graphics::spritebatch::SpriteBatch,
     cells: [[Cell; 3]; 3],
     turn: Cell,
+    state: State,
     mouse_tk: ToggleKey,
 }
 impl Controller {
-    pub fn new(batch: graphics::spritebatch::SpriteBatch) -> Self {
+    pub fn new(white_batch: graphics::spritebatch::SpriteBatch) -> Self {
         Self {
-            batch: batch,
+            batch: white_batch,
             cells: [[Cell::Empty; 3]; 3],
             turn: Cell::X,
+            state: State::Playing,
             mouse_tk: ToggleKey::new(),
         }
     }
@@ -67,11 +76,45 @@ impl Controller {
         self.cells = [[Cell::Empty; 3]; 3];
         self.turn = Cell::X;
     }
+    fn check_win(&mut self) -> State {
+        for i in 0..3 {
+            if self.cells[i][0] != Cell::Empty
+                && self.cells[i][0] == self.cells[i][1]
+                && self.cells[i][1] == self.cells[i][2]
+            {
+                return State::Won(self.cells[i][0]);
+            }
+        }
+        for i in 0..3 {
+            if self.cells[0][i] != Cell::Empty
+                && self.cells[0][i] == self.cells[1][i]
+                && self.cells[1][i] == self.cells[2][i]
+            {
+                return State::Won(self.cells[0][i]);
+            }
+        }
+        if self.cells[0][0] != Cell::Empty
+            && self.cells[0][0] == self.cells[1][1]
+            && self.cells[1][1] == self.cells[2][2]
+        {
+            return State::Won(self.cells[0][0]);
+        }
+        if self.cells[0][2] != Cell::Empty
+            && self.cells[0][2] == self.cells[1][1]
+            && self.cells[1][1] == self.cells[2][0]
+        {
+            return State::Won(self.cells[0][2]);
+        }
+        if self.cells.iter().flatten().all(|c| *c != Cell::Empty) {
+            return State::Draw;
+        }
+        State::Playing
+    }
     fn draw_grid(&mut self, context: &mut Context) -> GameResult {
-
         if keyboard::is_key_pressed(context, KeyCode::R) {
             self.reset();
         }
+        self.state = self.check_win();
 
         let pt = mint::Point2 {
             x: (WIDTH - 3. * SIZE as f32) / 2.,
@@ -105,12 +148,16 @@ impl Controller {
                         && mouse_pos.x <= pt.x + INNER_SCALE * SIZE as f32
                         && mouse_pos.y >= pt.y
                         && mouse_pos.y <= pt.y + INNER_SCALE * SIZE as f32)
+                    || self.state != State::Playing
                 {
                     params = params.color(BACK_COLOR);
-                }
-                else {
+                } else {
                     params = params.color(SELECT_COLOR);
-                    if self.mouse_tk.down(mouse::button_pressed(context, MouseButton::Left)) {
+                    if self
+                        .mouse_tk
+                        .down(mouse::button_pressed(context, MouseButton::Left))
+                        && self.state == State::Playing
+                    {
                         self.cells[x][y] = self.turn;
                         self.turn = match self.turn {
                             Cell::X => Cell::O,
