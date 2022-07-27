@@ -18,6 +18,7 @@ const CELL_SCALE: f32 = 0.6;
 
 const BACK_COLOR: graphics::Color = graphics::Color::BLACK;
 const LINE_COLOR: graphics::Color = graphics::Color::WHITE;
+const SELECT_COLOR: graphics::Color = graphics::Color::BLUE;
 
 const X_COLOR: graphics::Color = graphics::Color::GREEN;
 const O_COLOR: graphics::Color = graphics::Color::RED;
@@ -51,6 +52,7 @@ struct Controller {
     batch: graphics::spritebatch::SpriteBatch,
     cells: [[Cell; 3]; 3],
     turn: Cell,
+    mouse_tk: ToggleKey,
 }
 impl Controller {
     pub fn new(batch: graphics::spritebatch::SpriteBatch) -> Self {
@@ -58,9 +60,19 @@ impl Controller {
             batch: batch,
             cells: [[Cell::Empty; 3]; 3],
             turn: Cell::X,
+            mouse_tk: ToggleKey::new(),
         }
     }
+    fn reset(&mut self) {
+        self.cells = [[Cell::Empty; 3]; 3];
+        self.turn = Cell::X;
+    }
     fn draw_grid(&mut self, context: &mut Context) -> GameResult {
+
+        if keyboard::is_key_pressed(context, KeyCode::R) {
+            self.reset();
+        }
+
         let pt = mint::Point2 {
             x: (WIDTH - 3. * SIZE as f32) / 2.,
             y: (HEIGHT - 3. * SIZE as f32) / 2.,
@@ -70,9 +82,6 @@ impl Controller {
             .dest(pt)
             .color(LINE_COLOR);
         self.batch.add(params);
-
-        self.cells[1][1] = Cell::X;
-        self.cells[2][1] = Cell::O;
 
         for x in 0..3 {
             for y in 0..3 {
@@ -98,6 +107,17 @@ impl Controller {
                         && mouse_pos.y <= pt.y + INNER_SCALE * SIZE as f32)
                 {
                     params = params.color(BACK_COLOR);
+                }
+                else {
+                    params = params.color(SELECT_COLOR);
+                    if self.mouse_tk.down(mouse::button_pressed(context, MouseButton::Left)) {
+                        self.cells[x][y] = self.turn;
+                        self.turn = match self.turn {
+                            Cell::X => Cell::O,
+                            Cell::O => Cell::X,
+                            _ => unreachable!(),
+                        };
+                    }
                 }
                 self.batch.add(params);
 
@@ -176,8 +196,6 @@ impl Controller {
 }
 impl event::EventHandler for Controller {
     fn update(&mut self, context: &mut Context) -> GameResult {
-        // self.handle_input(context);
-
         Ok(())
     }
     fn draw(&mut self, context: &mut Context) -> GameResult {
