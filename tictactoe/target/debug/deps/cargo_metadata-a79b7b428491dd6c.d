@@ -1,0 +1,11 @@
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\deps\cargo_metadata-a79b7b428491dd6c.rmeta: C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\lib.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\dependency.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\diagnostic.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\errors.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\messages.rs
+
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\deps\libcargo_metadata-a79b7b428491dd6c.rlib: C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\lib.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\dependency.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\diagnostic.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\errors.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\messages.rs
+
+C:\Users\milla\Desktop\coding\TicTacToe\tictactoe\target\debug\deps\cargo_metadata-a79b7b428491dd6c.d: C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\lib.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\dependency.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\diagnostic.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\errors.rs C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\messages.rs
+
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\lib.rs:
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\dependency.rs:
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\diagnostic.rs:
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\errors.rs:
+C:\Users\milla\.cargo\registry\src\github.com-1ecc6299db9ec823\cargo_metadata-0.14.2\src\messages.rs:
